@@ -6,17 +6,17 @@ class InvalidInputError(Exception):
         self.value = text
 
 
-class User:
+class Fraction:
     def __init__(self):
         self.improper_whole = 1
         self.num = 0
         self.den = 1
-        self.choice = ''
         self.raw_string = ''
+        self.input_list = []
 
-    def get_input(self):
+    def get_input(self, i):
         try:
-            self.raw_string = str(input('Enter input 1: '))
+            self.raw_string = str(input('Enter input %d: ' % i))
             if self.raw_string.count('/') > 1:
                 raise InvalidInputError
             else:
@@ -30,19 +30,22 @@ class User:
                         self.num = int(self.num)
                         self.den = int(self.den)
                         self.num = self.improper_whole * self.den + self.num
-                        return self.num, self.den
+                        self.input_list = self.num, self.den
+                        return
                     # if pure fraction
                     else:
                         self.num, self.den = self.raw_string.split('/', 1)
-                        return int(self.num), int(self.den)
+                        self.input_list = int(self.num), int(self.den)
+                        return
                 else:
-                    return int(self.raw_string), 1
+                    self.input_list = int(self.raw_string), 1
+                    return
         except Exception:
             print('Invalid input. Please try again.')
-            return 'e'
+            self.input_list = 'e'
 
-    @staticmethod
-    def menu():
+
+def menu():
         print("""
 --------------------------
    WELCOME TO PROJECT 2
@@ -56,24 +59,47 @@ Q - Quit
         return input('Select operation: ').upper()
 
 
-def main():
-    user = User()
+def get_inputs(c, i):
     while True:
-        user.choice = user.menu()
-        if user.choice == 'Q':
-            print("""
---------------------------
-    THANK YOU - GOODBYE
---------------------------
-            """)
-            exit(0)
-        input_list = user.get_input()
-        if input_list[0] == 'e':
+        c.get_input(i)
+        if c.input_list[0] == 'e':
             continue
         else:
-            user.num, user.den = input_list
+            break
+    c.num, c.den = c.input_list
 
-        print('Fraction: %s/%s' % (user.num, user.den))
+
+def switcher(choice, c1, c2):
+    if choice == 'A':
+        pass
+    elif choice == 'B':
+        pass
+    elif choice == 'C':
+        pass
+    elif choice == 'D':
+        pass
+    else:
+        quits()
+
+
+def quits():
+    print("\n----------------\n   THANKS!\n----------------")
+    exit(0)
+
+
+def main():
+    f1 = Fraction()
+    f2 = Fraction()
+    while True:
+        choice = menu()
+        if choice == 'Q':
+            quits()
+        get_inputs(f1, 1)
+        get_inputs(f2, 2)
+        switcher(choice, f1, f2)
+
+        print('Fraction 1: %s/%s' % (f1.num, f1.den))
+        print('Fraction 2: %s/%s' % (f2.num, f2.den))
 
 
 if __name__ == '__main__':
