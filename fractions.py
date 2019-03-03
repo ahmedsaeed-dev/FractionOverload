@@ -14,9 +14,17 @@ class Fraction:
         self.raw_string = ''
         self.input_list = []
 
+    def check_negs(self):
+        if self.num < 0 and self.den < 0:
+            self.num *= -1
+            self.den *= -1
+        if self.den < 0:
+            self.den *= -1
+            self.num *= -1
+
     # add overload
     def __add__(self, other):
-        c3 = Fraction()
+        c = Fraction()
         lcm = self.lcm(self, self.den, other.den)
         # sets common denominator
         temp_s = int(lcm / self.den)
@@ -26,12 +34,46 @@ class Fraction:
         # multiplies numerators based off common den
         self.num *= temp_s
         other.num *= temp_o
-        c3.num = self.num + other.num
-        c3.den = self.den
-        return c3
+
+        # addition
+        c.num = self.num + other.num
+        c.den = self.den
+        return c
+
+    def __sub__(self, other):
+        c = Fraction()
+        lcm = self.lcm(self, self.den, other.den)
+        # sets common denominator
+        temp_s = int(lcm / self.den)
+        self.den *= temp_s
+        temp_o = int(lcm / other.den)
+        other.den *= temp_o
+        # multiplies numerators based off common den
+        self.num *= temp_s
+        other.num *= temp_o
+
+        # subtraction
+        c.num = self.num - other.num
+        c.den = self.den
+        return c
+
+    def __mul__(self, other):
+        c = Fraction()
+        c.num = self.num * other.num
+        c.den = self.den * other.den
+        return c
+
+    def __divmod__(self, other):
+        c = Fraction()
+        temp = other.num
+        other.num = other.den
+        other.den = temp
+        return self.__mul__(other)
 
     @staticmethod
     def gcd(a, b):
+        if a == 0 or b == 0:
+            return a
         while a != b:
             if a > b:
                 a -= b
@@ -45,14 +87,15 @@ class Fraction:
 
     def reduce_fractions(self):
         greatest = int(self.gcd(self.num, self.den))
-        self.num /= greatest
-        self.den /= greatest
+        if greatest != 0:
+            self.num /= greatest
+            self.den /= greatest
         self.num = int(self.num)
         self.den = int(self.den)
         return
 
     def display_results(self):
-        if self.den == 1:
+        if self.den == 1 or self.num == 0:
             print('Results = %s' % self.num)
         else:
             print('Results = %s/%s' % (self.num, self.den))
@@ -117,19 +160,15 @@ def get_inputs(c, i):
     c.num, c.den = c.input_list
 
 
-def addition(c1, c2):
-    return c1.__add__(c2)
-
-
 def switcher(choice, c1, c2):
     if choice == 'A':
-        return addition(c1, c2)
+        return c1.__add__(c2)
     elif choice == 'B':
-        pass
+        return c1.__sub__(c2)
     elif choice == 'C':
-        pass
+        return c1.__mul__(c2)
     elif choice == 'D':
-        pass
+        return c1.__divmod__(c2)
     else:
         quits()
 
@@ -145,6 +184,8 @@ def main():
             quits()
         get_inputs(f1, 1)
         get_inputs(f2, 2)
+        f1.check_negs()
+        f2.check_negs()
         f3 = switcher(choice, f1, f2)
         f3.reduce_fractions()
         f3.display_results()
