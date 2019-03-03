@@ -17,7 +17,7 @@ class Fraction:
     # add overload
     def __add__(self, other):
         c3 = Fraction()
-        lcm = self.lcm(self.den, other.den)
+        lcm = self.lcm(self, self.den, other.den)
         # sets common denominator
         temp_s = int(lcm / self.den)
         self.den *= temp_s
@@ -31,14 +31,31 @@ class Fraction:
         return c3
 
     @staticmethod
-    def lcm(a, b):
-        x, y = a, b
+    def gcd(a, b):
         while a != b:
             if a > b:
                 a -= b
             else:
                 b -= a
-        return (x * y) / a
+        return a
+
+    @staticmethod
+    def lcm(self, a, b):
+        return (a * b) / self.gcd(a, b)
+
+    def reduce_fractions(self):
+        greatest = int(self.gcd(self.num, self.den))
+        self.num /= greatest
+        self.den /= greatest
+        self.num = int(self.num)
+        self.den = int(self.den)
+        return
+
+    def display_results(self):
+        if self.den == 1:
+            print('Results = %s' % self.num)
+        else:
+            print('Results = %s/%s' % (self.num, self.den))
 
     def get_input(self, i):
         try:
@@ -117,18 +134,11 @@ def switcher(choice, c1, c2):
         quits()
 
 
-def display_output(c):
-    print('Results = %s/%s' % (c.num, c.den))
-
-
-
 def main():
     # fraction 1
     f1 = Fraction()
     # fraction 2
     f2 = Fraction()
-    # new fraction
-    f3 = Fraction()
     while True:
         choice = menu()
         if choice == 'Q':
@@ -136,7 +146,8 @@ def main():
         get_inputs(f1, 1)
         get_inputs(f2, 2)
         f3 = switcher(choice, f1, f2)
-        display_output(f3)
+        f3.reduce_fractions()
+        f3.display_results()
 
 
 if __name__ == '__main__':
