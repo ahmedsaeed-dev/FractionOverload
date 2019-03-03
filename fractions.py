@@ -1,5 +1,5 @@
-# TODO: allow main to instantiate second input as member of class User
 # TODO: create overload add for both user objects
+
 
 class InvalidInputError(Exception):
     def __init__(self, text):
@@ -13,6 +13,32 @@ class Fraction:
         self.den = 1
         self.raw_string = ''
         self.input_list = []
+
+    # add overload
+    def __add__(self, other):
+        c3 = Fraction()
+        lcm = self.lcm(self.den, other.den)
+        # sets common denominator
+        temp_s = int(lcm / self.den)
+        self.den *= temp_s
+        temp_o = int(lcm / other.den)
+        other.den *= temp_o
+        # multiplies numerators based off common den
+        self.num *= temp_s
+        other.num *= temp_o
+        c3.num = self.num + other.num
+        c3.den = self.den
+        return c3
+
+    @staticmethod
+    def lcm(a, b):
+        x, y = a, b
+        while a != b:
+            if a > b:
+                a -= b
+            else:
+                b -= a
+        return (x * y) / a
 
     def get_input(self, i):
         try:
@@ -59,6 +85,11 @@ Q - Quit
         return input('Select operation: ').upper()
 
 
+def quits():
+    print("\n----------------\n   THANKS!\n----------------")
+    exit(0)
+
+
 def get_inputs(c, i):
     while True:
         c.get_input(i)
@@ -69,9 +100,13 @@ def get_inputs(c, i):
     c.num, c.den = c.input_list
 
 
+def addition(c1, c2):
+    return c1.__add__(c2)
+
+
 def switcher(choice, c1, c2):
     if choice == 'A':
-        pass
+        return addition(c1, c2)
     elif choice == 'B':
         pass
     elif choice == 'C':
@@ -82,24 +117,26 @@ def switcher(choice, c1, c2):
         quits()
 
 
-def quits():
-    print("\n----------------\n   THANKS!\n----------------")
-    exit(0)
+def display_output(c):
+    print('Results = %s/%s' % (c.num, c.den))
+
 
 
 def main():
+    # fraction 1
     f1 = Fraction()
+    # fraction 2
     f2 = Fraction()
+    # new fraction
+    f3 = Fraction()
     while True:
         choice = menu()
         if choice == 'Q':
             quits()
         get_inputs(f1, 1)
         get_inputs(f2, 2)
-        switcher(choice, f1, f2)
-
-        print('Fraction 1: %s/%s' % (f1.num, f1.den))
-        print('Fraction 2: %s/%s' % (f2.num, f2.den))
+        f3 = switcher(choice, f1, f2)
+        display_output(f3)
 
 
 if __name__ == '__main__':
