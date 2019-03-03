@@ -1,4 +1,8 @@
-# TODO: create overload add for both user objects
+# Programmer:   Ahmed L Saeed
+# Course:       CIS 298 - Intro to Python
+# Instructor:   Robert Mann
+# Program:      Project 02 - Fraction Class
+# Due Date:     03/21/2019
 
 
 class InvalidInputError(Exception):
@@ -133,9 +137,9 @@ class Fraction:
 
 def menu():
         print("""
---------------------------
+---------------------------
    WELCOME TO PROJECT 2
---------------------------
+---------------------------
 A - Addition        ( + )
 B - Subtraction     ( - )
 C - Multiplication  ( x ) 
@@ -146,7 +150,11 @@ Q - Quit
 
 
 def quits():
-    print("\n----------------\n   THANKS!\n----------------")
+    print("""
+---------------------------
+  THANK YOU FOR YOUR TIME
+---------------------------
+    """)
     exit(0)
 
 
